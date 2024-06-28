@@ -1,17 +1,33 @@
 body{
     background-image: linear-gradient(to top, #4496d9, #4192d6, #3e8fd4, #3c8bd1, #3988ce);
+    /* background-image: linear-gradient(to right top, #955d31, #8c582e, #84532c, #7b4e29, #734927, #704128, #6b3a2a, #66332b, #5f2a32, #532439, #43223d, #30203e); */
     height: 100%;
     margin: 0;
     background-repeat: no-repeat;
     background-attachment: fixed;
+    font-family: "Lucida Console", "Courier New", monospace;
 }
 #weatherIcon{
     width: 10em;
     height: 10em;
 }
 #weatherDataContainer {
-    background-color: #f8f9fa;
+    background-image: linear-gradient(to top, #0602b6, #372bc9, #5348db, #6c64ed, #857ffe);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  #weatherDataContainer p{
+    color: white;
+  }
+  .weather-info {
+    display: flex;
+    align-items: center; /* Center vertically */
+    margin-bottom: 10px;
+  }
+  .weather-info p {
+    margin-bottom: 0; /* Remove default bottom margin */
+  }
+  .weather-info:last-child {
+    margin-bottom: 0;
   }

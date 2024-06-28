@@ -18,9 +18,20 @@ document.getElementById('zipButton').addEventListener('click', function() {
 const getZipData = (zipCode) => {
     let zipApiArgs = `${zipCode},${country_code}&appid=${API_key}` // Get Zip API Arguments
     fetch(`${zipAPI}${zipApiArgs}`)
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Bad zip code or Error Fetching Data');
+            }
+            return response.json();
+        })
         .then((json) => {
-            getWeatherData(json.lat, json.lon); // Send long/lat to get actual weather information
+            getWeatherData(json.lat, json.lon);
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+            // TODO: Generate and display errors if any
+            displayErrors(error);
+            // Handle the error here, such as notifying the user or retrying the request
         });
 }
 // This function actually recieves the weather data needed to be displayed
@@ -39,13 +50,14 @@ const getWeatherData = (latitude, longitude) => {
     weatherDataContainer.appendChild(weatherData);
 }
 
-// TODO: Write a function that will display all the data in a visually appealing and easily
+// Write a function that will display all the data in a visually appealing and easily
 // customizable format
 const displayWeatherData = (weatherData) => {
     // Get weather data container
     let weatherDataContainer = document.getElementById("weatherDataContainer");
     weatherDataContainer.innerHTML = '' // Clear former data
-    // TODO: Create elements for: Current Date, City from ZIP, Temp in Farenheit, current conditions,
+    displayErrors();
+    // Create elements for: Current Date, City from ZIP, Temp in Farenheit, current conditions,
     // and temp Hi/Lo
     let currentDate = document.createElement('p'); // Date
     let city = document.createElement('p'); // City
@@ -57,25 +69,27 @@ const displayWeatherData = (weatherData) => {
     // Set data and id's
     currentDate.textContent = `Date: ${Date(weatherData.dt).toLocaleString()}`;
     currentDate.id = 'currentDate';
-    currentDate.class = 'mb-1';
+    currentDate.className = 'mb-1 d-flex justify-content-center';
     city.textContent = `City: ${weatherData.name}`;
     city.id = 'city';
-    city.class = 'mb-1';
-    temperature.textContent = `Temperature: ${weatherData.main.temp}`;
+    city.className = 'mb-1 d-flex justify-content-center';
+    temperature.textContent = `Temperature: ${weatherData.main.temp}℉`;
     temperature.id = 'temperature';
-    temperature.class = 'mb-1';
+    temperature.className = 'mb-1 d-flex justify-content-center';
     conditions.textContent = `Weather Conditions: ${weatherData.weather[0].description}`;
     conditions.id = 'conditions';
-    conditions.class = 'mb-1';
-    tempHi.textContent = `Today's High: ${weatherData.main.temp_max}`;
+    conditions.className = 'mb-1 d-flex justify-content-center';
+    tempHi.textContent = `Today's High: ${weatherData.main.temp_max}℉`;
     tempHi.id = 'tempHi';
-    tempHi.class = 'mb-1';
-    tempLow.textContent = `Today's Low: ${weatherData.main.temp_min}`;
+    tempHi.className = 'mb-1 d-flex justify-content-center';
+    tempLow.textContent = `Today's Low: ${weatherData.main.temp_min}℉`;
     tempLow.id = 'tempLow';
-    tempLow.class = 'mb-0';
+    tempLow.className = 'mb-0 d-flex justify-content-center';
     // Add and SET data ID for the weatherData.weather[0][icon] so we can utilize the visuals
-    weatherIcon.src = `${iconAPI}${weatherData.weather[0].icon}.png`
-    weatherIcon.id = 'weatherIcon'
+    weatherIcon.src = `${iconAPI}${weatherData.weather[0].icon}.png`;
+    weatherIcon.id = 'weatherIcon';
+    weatherIcon.className = 'rounded mx-auto d-block';
+    document.getElementById("favIcon").href = weatherIcon.src;
     // Append all data to the container
     weatherDataContainer.appendChild(weatherIcon);
     weatherDataContainer.appendChild(currentDate);
@@ -85,6 +99,24 @@ const displayWeatherData = (weatherData) => {
     weatherDataContainer.appendChild(tempHi);
     weatherDataContainer.appendChild(tempLow);
     weatherDataContainer.style.display = 'inherit';
+    weatherDataContainer.className = 'justify-content-center';
 
     // console.log(currentDate)
+}
+
+// Error check display function
+const displayErrors = (errors) => {
+    let errorList = document.getElementById("errors");
+    if(errors == undefined){
+        errorList.style.display = 'none';
+    }
+    else{
+        errorList.style.display = 'inherit';
+    }
+    // Clear all errors inside if any
+    errorList.innerHTML = "";
+    let error = document.createElement('p');
+    error.textContent = errors;
+    error.className = "mb-1 d-flex justify-content-center";
+    errorList.appendChild(error);
 }
