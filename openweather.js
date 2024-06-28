@@ -76,9 +76,6 @@ const displayWeatherData = (weatherData) => {
     // Add and SET data ID for the weatherData.weather[0][icon] so we can utilize the visuals
     weatherIcon.src = `${iconAPI}${weatherData.weather[0].icon}.png`
     weatherIcon.id = 'weatherIcon'
-    // Make and set site favicon to the weather icon
-    favIcon = document.getElementById("favIcon");
-    favIcon.href = weatherIcon.src;
     // Append all data to the container
     weatherDataContainer.appendChild(weatherIcon);
     weatherDataContainer.appendChild(currentDate);
