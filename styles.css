@@ -5,3 +5,13 @@ body{
     background-repeat: no-repeat;
     background-attachment: fixed;
 }
+#weatherIcon{
+    width: 10em;
+    height: 10em;
+}
+#weatherDataContainer {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
