@@ -101,7 +101,22 @@ const displayWeatherData = (weatherData) => {
     weatherDataContainer.style.display = 'inherit';
     weatherDataContainer.className = 'justify-content-center';
 
-    // console.log(currentDate)
+    // Check the weather conditions, if it's stormy, change the background, else revert
+    // Hint: If you need to find some rain use this: https://www.rainviewer.com/radars/united-states.html
+    if(weatherData.weather[0].description.includes('rain') || weatherData.weather[0].description.includes('thunderstorm')){
+        weatherDataContainer.style.backgroundImage = 'url(https://mdbgo.io/ascensus/mdb-advanced/img/clouds.gif)';
+        weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+        weatherDataContainer.style.backgroundSize = 'cover';
+    }
+    else if(weatherData.weather[0].description.includes('clear')){
+        weatherDataContainer.style.backgroundImage = 'url(https://clipart-library.com/images/6ip5qzeMT.gif)';
+        weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+        weatherDataContainer.style.backgroundSize = 'cover';
+    }
+    else{
+        weatherDataContainer.style.backgroundImage = 'linear-gradient(to top, #0602b6, #372bc9, #5348db, #6c64ed, #857ffe)';
+    }
+
 }
 
 // Error check display function
