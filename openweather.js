@@ -5,6 +5,7 @@ const country_code = 'US';
 const zipAPI = `https://api.openweathermap.org/geo/1.0/zip?zip=`;
 const latLongAPI = `https://api.openweathermap.org/data/2.5/weather?lat=`
 const iconAPI = `https://openweathermap.org/img/w/`
+const fiveDayAPI = `https:/api.openweathermap.org/data/2.5/forecast?`
 
 // Add eventlistener for onclick of ZIPCode button to recieve weather data
 document.getElementById('zipButton').addEventListener('click', function() {
@@ -26,6 +27,7 @@ const getZipData = (zipCode) => {
         })
         .then((json) => {
             getWeatherData(json.lat, json.lon);
+            threeDayForecast(json.lat, json.lon);
         })
         .catch((error) => {
             console.error('Error fetching data:', error);
@@ -103,13 +105,40 @@ const displayWeatherData = (weatherData) => {
 
     // Check the weather conditions, if it's stormy, change the background, else revert
     // Hint: If you need to find some rain use this: https://www.rainviewer.com/radars/united-states.html
-    if(weatherData.weather[0].description.includes('rain') || weatherData.weather[0].description.includes('thunderstorm')){
+    if(weatherData.weather[0].description.includes('clear')){
+        if(weatherData.weather[0].icon.includes('n')){ // Check for nighttime skies variant
+            weatherDataContainer.style.backgroundImage = 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmNtanF0b3RoMjN5MGFxNHVvbGpnNDBqaHExajBpcGhvY2JzNXlmayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NsjutwzYUp12YP6mbh/giphy.webp)';
+            weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+            weatherDataContainer.style.backgroundSize = 'cover';
+        }
+        else{
+            weatherDataContainer.style.backgroundImage = 'url(https://clipart-library.com/images/6ip5qzeMT.gif)';
+            weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+            weatherDataContainer.style.backgroundSize = 'cover';
+        }
+    }
+    else if(weatherData.weather[0].description.includes('clouds')){
         weatherDataContainer.style.backgroundImage = 'url(https://mdbgo.io/ascensus/mdb-advanced/img/clouds.gif)';
         weatherDataContainer.style.backgroundRepeat = 'no-repeat';
         weatherDataContainer.style.backgroundSize = 'cover';
     }
-    else if(weatherData.weather[0].description.includes('clear')){
-        weatherDataContainer.style.backgroundImage = 'url(https://clipart-library.com/images/6ip5qzeMT.gif)';
+    else if(weatherData.weather[0].description.includes('thunderstorm')){
+        weatherDataContainer.style.backgroundImage = 'url(https://i.pinimg.com/originals/32/0f/55/320f55b25e9580ac3c7c7825e5843dcf.gif)';
+        weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+        weatherDataContainer.style.backgroundSize = 'cover';
+    }
+    else if(weatherData.weather[0].description.includes('rain')){
+        weatherDataContainer.style.backgroundImage = 'url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ3BoNnJyZjliMTgxYTFoZTBuMDgwYnBicmRwYzJlb2tlcmxhaWtpMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3vRbNFMuFt5Zm372/giphy.webp)';
+        weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+        weatherDataContainer.style.backgroundSize = 'cover';
+    }
+    else if(weatherData.weather[0].icon == '50d' || weatherData.weather[0].icon == '50n'){ // Blanket check for all weather with "mist" icon
+        weatherDataContainer.style.backgroundImage = 'url(https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExbWJjamg1d3Y1Znd1dWo2MWw3NmgybmoyZ2p3ZmZ1ZGF2c3djajVqcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bKPbiexNPPfk3T0vhq/giphy.webp)';
+        weatherDataContainer.style.backgroundRepeat = 'no-repeat';
+        weatherDataContainer.style.backgroundSize = 'cover';
+    }
+    else if(weatherData.weather[0].icon == '13d' || weatherData.weather[0].icon == '13n'){ // Blanket check for all weather with "snow" day and night icon
+        weatherDataContainer.style.backgroundImage = 'url(https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2VtZDA0NDJ1dzVwajdsbThwaGlzOGhzMDJmaHZ6YzRiMTdyMWJ2NSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rRmBOCZDJJGU0/giphy.webp)';
         weatherDataContainer.style.backgroundRepeat = 'no-repeat';
         weatherDataContainer.style.backgroundSize = 'cover';
     }
@@ -134,4 +163,54 @@ const displayErrors = (errors) => {
     error.textContent = errors;
     error.className = "mb-1 d-flex justify-content-center";
     errorList.appendChild(error);
+}
+
+// Write a 3 day display forecast
+const threeDayForecast = (lat,long) => {
+    let args = `lat=${lat}&lon=${long}&appid=${API_key}`
+    fetch(`${fiveDayAPI}${args}`)
+        .then((response) => response.json())
+        .then((json) => {
+            displayThreeDay(json)
+        });
+}
+
+// 3 Day Forecast Display
+const displayThreeDay = (data) => {
+    // Create elements for each day including [icon, High, Low]
+    for (let i = 9; i != 33; i = i + 8) {
+        // Set day = element at i
+        let day = document.getElementById(`day${i}`)
+        // Clear former data
+        day.innerHTML = ''
+        // Declare Elements in loop
+        let date = document.createElement('p'); // Date for forecast
+        let tempHi = document.createElement('p'); // Current High
+        let tempLow = document.createElement('p'); // Current Low
+        let weatherIcon = document.createElement('img');
+        // Add date
+        let dateData = new Date(data.list[i].dt * 1000);
+        date.textContent = `${dateData.toDateString()}`;
+        date.id = `day${i}date`;
+        date.className = `mb-1 d-flex justify-content-center`;
+        // Temp Hi
+        tempHi.textContent = `Hi: ${data.list[i].main.temp_max}`;
+        tempHi.id = `day${i}High`;
+        tempHi.className = `mb-1 d-flex justify-content-center`;
+        // Temp Low
+        tempLow.textContent = `Low: ${data.list[i].main.temp_min}`;
+        tempLow.id = `day${i}Low`;
+        tempLow.className = `mb-1 d-flex justify-content-center`;
+        // Icon
+        weatherIcon.src = `${iconAPI}${data.list[i].weather[0].icon}.png`; 
+        weatherIcon.id = `day${i}Image`;
+        weatherIcon.className = `rounded mx-auto d-block`;
+
+        // Append items into day
+        day.appendChild(weatherIcon);
+        day.appendChild(date);
+        day.appendChild(tempHi);
+        day.appendChild(tempLow);
+    }
+    document.getElementById('threeDayContainer').style.display = 'flex';
 }

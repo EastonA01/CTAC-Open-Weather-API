@@ -17,6 +17,26 @@ body{
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
+  .threeDayForecast{
+    background-color: rgb(139, 136, 136);
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding: 1em;
+    border-radius: 4em;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .threeDayForecast p{
+    color: white;
+    text-shadow: -2px 2px 4px black;
+  }
+  .threeDayForecast img{
+    width: 6em;
+  }
+  #threeDayContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
   #weatherDataContainer p{
     color: white;
     text-shadow: -2px 1px 6px black;
