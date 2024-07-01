@@ -32,3 +32,6 @@ body{
   .weather-info:last-child {
     margin-bottom: 0;
   }
+#zipButton{
+  background-color: darkgrey;
+}
