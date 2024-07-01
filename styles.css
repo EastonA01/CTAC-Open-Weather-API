@@ -24,6 +24,7 @@ body{
     padding: 1em;
     border-radius: 4em;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-align: center;
   }
   .threeDayForecast p{
     color: white;
@@ -35,7 +36,7 @@ body{
   #threeDayContainer{
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
   }
   #weatherDataContainer p{
     color: white;
