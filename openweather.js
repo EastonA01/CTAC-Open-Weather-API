@@ -5,7 +5,7 @@ const country_code = 'US';
 const zipAPI = `https://api.openweathermap.org/geo/1.0/zip?zip=`;
 const latLongAPI = `https://api.openweathermap.org/data/2.5/weather?lat=`
 const iconAPI = `https://openweathermap.org/img/w/`
-const fiveDayAPI = `https:/api.openweathermap.org/data/2.5/forecast?`
+const fiveDayAPI = `https://api.openweathermap.org/data/2.5/forecast?`
 
 // Add eventlistener for onclick of ZIPCode button to recieve weather data
 document.getElementById('zipButton').addEventListener('click', function() {
@@ -167,7 +167,7 @@ const displayErrors = (errors) => {
 
 // Write a 3 day display forecast
 const threeDayForecast = (lat,long) => {
-    let args = `lat=${lat}&lon=${long}&appid=${API_key}`
+    let args = `lat=${lat}&lon=${long}&appid=${API_key}&units=imperial`
     fetch(`${fiveDayAPI}${args}`)
         .then((response) => response.json())
         .then((json) => {
@@ -194,11 +194,11 @@ const displayThreeDay = (data) => {
         date.id = `day${i}date`;
         date.className = `mb-1 d-flex justify-content-center`;
         // Temp Hi
-        tempHi.textContent = `Hi: ${data.list[i].main.temp_max}`;
+        tempHi.textContent = `Hi: ${data.list[i].main.temp_max}℉`;
         tempHi.id = `day${i}High`;
         tempHi.className = `mb-1 d-flex justify-content-center`;
         // Temp Low
-        tempLow.textContent = `Low: ${data.list[i].main.temp_min}`;
+        tempLow.textContent = `Low: ${data.list[i].main.temp_min}℉`;
         tempLow.id = `day${i}Low`;
         tempLow.className = `mb-1 d-flex justify-content-center`;
         // Icon
